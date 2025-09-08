@@ -1,10 +1,5 @@
 #!/bin/bash
 set -e
-# 前置作業
-# 安裝 comfy
-pip install comfy
-# 確認安裝成功
-python3 -c "import comfy; print(comfy.__version__)"
 
 # --- 基本設定 ---
 COMFYUI_DIR="/workspace/ComfyUI"
@@ -37,10 +32,10 @@ fi
 
 # --- 2. 安裝缺失節點並修復 (GitHub clone) ---
 # 安裝 workflow 依賴
-python3 "$CM_CLI" install-deps --workflow="$WORKFLOW_JSON"
+python3 cm-cli.py install-deps --workflow="$WORKFLOW_JSON"
 
 # 嘗試修復所有節點
-python3 "$CM_CLI" fix all --workflow="$WORKFLOW_JSON"
+python3 cm-cli.py fix all --workflow="$WORKFLOW_JSON"
 
 # --- 3. InstantID antelopev2 修復 ---
 INSIGHT_DIR="$COMFYUI_DIR/models/insightface/models"
