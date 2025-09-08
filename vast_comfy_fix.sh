@@ -1,10 +1,11 @@
 #!/bin/bash
 set -e
-
+# 下載工作流並到指定位置
+curl -o /workspace/ComfyUI/user/default/workflows/換臉-MINTS.json https://raw.githubusercontent.com/yetrtyog-creator/Automation_script_used_by_Chuangchao_Company/main/%E6%8D%A2%E8%84%B8-MINTS.json
 # --- 基本設定 ---
 COMFYUI_DIR="/workspace/ComfyUI"
 CM_CLI="$COMFYUI_DIR/custom_nodes/ComfyUI-Manager/cm-cli.py"
-WORKFLOW_JSON="/workspace/my_workflow.json"
+WORKFLOW_JSON="/workspace/ComfyUI/user/default/workflows/換臉-MINTS.json"
 
 # 模型目錄
 CHECKPOINTS="$COMFYUI_DIR/models/checkpoints"
