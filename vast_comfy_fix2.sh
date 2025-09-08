@@ -2,7 +2,8 @@
 set -e
 
 # --- 基本設定 ---
-export COMFYUI_PATH=/workspace/ComfyUI
+export PYTHONPATH=$COMFYUI_PATH:$PYTHONPATH
+python -c "import comfy.cli_args; print('OK')"
 COMFYUI_DIR="/workspace/ComfyUI"
 WORKFLOW_JSON="$COMFYUI_DIR/user/default/workflows/Face-changing-MINTS.json"
 
