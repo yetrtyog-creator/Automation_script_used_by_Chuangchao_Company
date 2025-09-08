@@ -32,10 +32,10 @@ fi
 
 # --- 2. 安裝缺失節點並修復 (GitHub clone) ---
 # 安裝 workflow 依賴
-python3 cm-cli.py install-deps --workflow="$WORKFLOW_JSON"
+python3 "$CM_CLI" install-deps --workflow="$WORKFLOW_JSON"
 
 # 嘗試修復所有節點
-python3 cm-cli.py fix all --workflow="$WORKFLOW_JSON"
+python3 "$CM_CLI" fix all --workflow="$WORKFLOW_JSON"
 
 # --- 3. InstantID antelopev2 修復 ---
 INSIGHT_DIR="$COMFYUI_DIR/models/insightface/models"
