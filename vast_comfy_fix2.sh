@@ -1,6 +1,11 @@
 #!/bin/bash
 set -e
 
+# --- 基本設定 ---
+COMFYUI_DIR="/workspace/ComfyUI"
+WORKFLOW_JSON="$COMFYUI_DIR/user/default/workflows/Face-changing-MINTS.json"
+CM_CLI="$COMFYUI_DIR/custom_nodes/ComfyUI-Manager/cm-cli.py"
+
 DEST_DIR=/workspace/ComfyUI/user/default/workflows/
 FILE_NAME=Face-changing-MINTS.json
 FILE_URL=https://raw.githubusercontent.com/yetrtyog-creator/Automation_script_used_by_Chuangchao_Company/main/%E6%8D%A2%E8%84%B8-MINTS.json
