@@ -27,7 +27,7 @@ fi
 
 # --- 2. 安裝缺失節點並修復 (GitHub clone) ---
 echo "--- cm-cli 安裝 workflow 依賴 ---"
-python3 "$CM_CLI" install all || true
+python3 -m comfy node install-deps --workflow="$WORKFLOW_JSON"
 
 echo "--- cm-cli 嘗試修復 ---"
 python3 "$CM_CLI" fix all || true
