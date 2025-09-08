@@ -1,5 +1,10 @@
 #!/bin/bash
 set -e
+# 前置作業
+# 安裝 comfy
+pip install comfy
+# 確認安裝成功
+python3 -c "import comfy; print(comfy.__version__)"
 
 # --- 基本設定 ---
 COMFYUI_DIR="/workspace/ComfyUI"
