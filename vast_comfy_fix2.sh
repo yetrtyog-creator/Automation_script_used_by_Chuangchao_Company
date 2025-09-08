@@ -31,11 +31,11 @@ if [ -f "$CONFIG_FILE" ]; then
 fi
 
 # --- 2. 安裝缺失節點並修復 (GitHub clone) ---
-echo "--- cm-cli 安裝 workflow 依賴 ---"
-python3 -m comfy node install-deps --workflow="$WORKFLOW_JSON"
+# 安裝 workflow 依賴
+python3 "$CM_CLI" install-deps --workflow="$WORKFLOW_JSON"
 
-echo "--- cm-cli 嘗試修復 ---"
-python3 -m comfy node fix all --workflow="$WORKFLOW_JSON"
+# 嘗試修復所有節點
+python3 "$CM_CLI" fix all --workflow="$WORKFLOW_JSON"
 
 # --- 3. InstantID antelopev2 修復 ---
 INSIGHT_DIR="$COMFYUI_DIR/models/insightface/models"
