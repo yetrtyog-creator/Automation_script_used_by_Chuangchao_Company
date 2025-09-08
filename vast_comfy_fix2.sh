@@ -2,6 +2,7 @@
 set -e
 
 # --- 基本設定 ---
+export COMFYUI_PATH=/workspace/ComfyUI
 COMFYUI_DIR="/workspace/ComfyUI"
 WORKFLOW_JSON="$COMFYUI_DIR/user/default/workflows/Face-changing-MINTS.json"
 
