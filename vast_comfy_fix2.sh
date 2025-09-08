@@ -25,36 +25,14 @@ if [ -f "$CONFIG_FILE" ]; then
     sed -i 's/security_level = .*/security_level = weak/' "$CONFIG_FILE"
 fi
 
-# --- 2. 安裝缺失節點 (GitHub clone) ---
-git clone https://github.com/melMass/comfy_mtb "$COMFYUI_DIR/custom_nodes/comfy_mtb" || true
-git clone https://github.com/evanspearman/ComfyMath "$COMFYUI_DIR/custom_nodes/ComfyMath" || true
-git clone https://github.com/Suzie1/ComfyUI_Comfyroll_CustomNodes "$COMFYUI_DIR/custom_nodes/ComfyUI_Comfyroll_CustomNodes" || true
-git clone https://github.com/jamesWalker55/comfyui-various "$COMFYUI_DIR/custom_nodes/comfyui-various" || true
+# --- 2. 安裝缺失節點並修復 (GitHub clone) ---
+echo "--- cm-cli 安裝 workflow 依賴 ---"
+python3 "$CM_CLI" install all || true
 
-# --- 3. 自動解析 workflow JSON 安裝節點 ---
-echo "--- 自動解析 workflow 安裝缺失節點 ---"
-python3 - <<PYTHON
-import json, subprocess
+echo "--- cm-cli 嘗試修復 ---"
+python3 "$CM_CLI" fix all || true
 
-workflow_file = "${WORKFLOW_JSON}"
-with open(workflow_file, 'r', encoding='utf-8') as f:
-    wf = json.load(f)
-
-nodes = set()
-for node in wf.get("nodes", []):
-    node_type = node.get("type")
-    if node_type:
-        nodes.add(node_type)
-
-if nodes:
-    print("將安裝以下節點:", nodes)
-    subprocess.run(["python3", "${CM_CLI}", "install", *nodes])
-    subprocess.run(["python3", "${CM_CLI}", "fix", "all"])
-else:
-    print("未發現節點")
-PYTHON
-
-# --- 4. InstantID antelopev2 修復 ---
+# --- 3. InstantID antelopev2 修復 ---
 INSIGHT_DIR="$COMFYUI_DIR/models/insightface/models"
 mkdir -p "$INSIGHT_DIR"
 cd "$INSIGHT_DIR"
@@ -64,7 +42,7 @@ unzip -o antelopev2.zip
 rm antelopev2.zip
 cd -
 
-# --- 5. 模型下載 ---
+# --- 4. 模型下載 ---
 mkdir -p "$CHECKPOINTS" "$CONTROLNET" "$UPSCALE" "$INSTANTID"
 wget -nc -P "$CHECKPOINTS" "https://huggingface.co/AiWise/Juggernaut-XL-V9-GE-RDPhoto2-Lightning_4S/resolve/main/juggernautXL_v9Rdphoto2Lightning.safetensors"
 wget -nc -P "$INSTANTID" "https://huggingface.co/InstantX/InstantID/resolve/main/ip-adapter.bin"
