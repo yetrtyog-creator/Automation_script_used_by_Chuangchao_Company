@@ -13,6 +13,7 @@ fi
 
 # 設定 Python 路徑並測試
 export PYTHONPATH="$COMFYUI_DIR:$PYTHONPATH"
+export COMFYUI_PATH="$COMFYUI_DIR"
 cd "$COMFYUI_DIR"
 
 # 嘗試導入 ComfyUI 模組（使用更安全的方式）
