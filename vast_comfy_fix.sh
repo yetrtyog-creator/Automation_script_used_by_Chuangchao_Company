@@ -1,7 +1,17 @@
 #!/bin/bash
 set -e
+
+DEST_DIR = /workspace/ComfyUI/user/default/workflows/ 
+FILE_NAME = 換臉-MINTS.json
+FILE_URL = https://raw.githubusercontent.com/yetrtyog-creator/Automation_script_used_by_Chuangchao_Company/main/%E6%8D%A2%E8%84%B8-MINTS.json
+# 創建文件夾且檢查確認
+if [ ! -d "$DEST_DIR" ]; then
+  mkdir -p "$DEST_DIR"
+  echo "資料夾 '$DEST_DIR' 不存在，已自動創建。"
+fi
 # 下載工作流並到指定位置
-curl -o /workspace/ComfyUI/user/default/workflows/換臉-MINTS.json https://raw.githubusercontent.com/yetrtyog-creator/Automation_script_used_by_Chuangchao_Company/main/%E6%8D%A2%E8%84%B8-MINTS.json
+wget -O "${DEST_DIR}${FILE_NAME}" "$FILE_URL"
+echo "檔案已下載到 '${DEST_DIR}${FILE_NAME}'"
 # --- 基本設定 ---
 COMFYUI_DIR="/workspace/ComfyUI"
 CM_CLI="$COMFYUI_DIR/custom_nodes/ComfyUI-Manager/cm-cli.py"
