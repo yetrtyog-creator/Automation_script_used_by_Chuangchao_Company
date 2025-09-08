@@ -1,9 +1,9 @@
 #!/bin/bash
 set -e
 
-DEST_DIR = /workspace/ComfyUI/user/default/workflows/ 
-FILE_NAME = 換臉-MINTS.json
-FILE_URL = https://raw.githubusercontent.com/yetrtyog-creator/Automation_script_used_by_Chuangchao_Company/main/%E6%8D%A2%E8%84%B8-MINTS.json
+DEST_DIR=/workspace/ComfyUI/user/default/workflows/ 
+FILE_NAME=換臉-MINTS.json
+FILE_URL=https://raw.githubusercontent.com/yetrtyog-creator/Automation_script_used_by_Chuangchao_Company/main/%E6%8D%A2%E8%84%B8-MINTS.json
 # 創建文件夾且檢查確認
 if [ ! -d "$DEST_DIR" ]; then
   mkdir -p "$DEST_DIR"
