@@ -4,7 +4,6 @@ set -e
 # --- 基本設定 ---
 COMFYUI_DIR="/workspace/ComfyUI"
 WORKFLOW_JSON="$COMFYUI_DIR/user/default/workflows/Face-changing-MINTS.json"
-CM_CLI="$COMFYUI_DIR/custom_nodes/ComfyUI-Manager/cm-cli.py"
 
 DEST_DIR=/workspace/ComfyUI/user/default/workflows/
 FILE_NAME=Face-changing-MINTS.json
