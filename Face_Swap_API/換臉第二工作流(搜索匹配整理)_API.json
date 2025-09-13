@@ -1,0 +1,372 @@
+{
+  "29": {
+    "inputs": {
+      "mode": "incremental_image",
+      "seed": 667915087082931,
+      "index": 0,
+      "label": "Batch 001",
+      "path": [
+        "37",
+        0
+      ],
+      "pattern": "*",
+      "allow_RGBA_output": "false",
+      "filename_text_extension": "true"
+    },
+    "class_type": "Load Image Batch",
+    "_meta": {
+      "title": "Load Image Batch"
+    }
+  },
+  "37": {
+    "inputs": {
+      "delimiter": "",
+      "clean_whitespace": "false",
+      "text_a": [
+        "162",
+        0
+      ],
+      "text_b": [
+        "163",
+        0
+      ],
+      "text_c": [
+        "164",
+        0
+      ],
+      "text_d": [
+        "165",
+        0
+      ]
+    },
+    "class_type": "Text Concatenate",
+    "_meta": {
+      "title": "Text Concatenate"
+    }
+  },
+  "110": {
+    "inputs": {
+      "delimiter": "",
+      "clean_whitespace": "false",
+      "text_a": [
+        "37",
+        0
+      ],
+      "text_b": [
+        "164",
+        0
+      ],
+      "text_c": [
+        "29",
+        1
+      ]
+    },
+    "class_type": "Text Concatenate",
+    "_meta": {
+      "title": "Text Concatenate"
+    }
+  },
+  "115": {
+    "inputs": {
+      "db_path": "./qdrant_data",
+      "collection_name": [
+        "172",
+        0
+      ],
+      "point_id": [
+        "110",
+        0
+      ],
+      "vector_name": ""
+    },
+    "class_type": "QdrantGetVectorByID",
+    "_meta": {
+      "title": "Qdrant: Get Vector by ID (Local)"
+    }
+  },
+  "116": {
+    "inputs": {
+      "db_path": "./qdrant_data",
+      "collection_name": [
+        "171",
+        0
+      ],
+      "query_vector": [
+        "115",
+        0
+      ],
+      "expected_dim": 512,
+      "hnsw_ef": 128,
+      "exact": false,
+      "with_payload": true,
+      "with_vectors": false,
+      "score_threshold": 0
+    },
+    "class_type": "QdrantSearchTop1",
+    "_meta": {
+      "title": "Qdrant: Search Best (Top-1) (Local)"
+    }
+  },
+  "118": {
+    "inputs": {
+      "json_string": [
+        "116",
+        0
+      ],
+      "path": "results[0].full_path"
+    },
+    "class_type": "JSONParserNode",
+    "_meta": {
+      "title": "Simple JSON Parser"
+    }
+  },
+  "120": {
+    "inputs": {
+      "image": [
+        "118",
+        0
+      ]
+    },
+    "class_type": "LoadImageFromPath",
+    "_meta": {
+      "title": "Load Image From Path"
+    }
+  },
+  "126": {
+    "inputs": {
+      "output_path": [
+        "153",
+        0
+      ],
+      "filename_prefix": "",
+      "filename_delimiter": "",
+      "filename_number_padding": 2,
+      "filename_number_start": "true",
+      "extension": "jpg",
+      "dpi": 300,
+      "quality": 99,
+      "optimize_image": "true",
+      "lossless_webp": "false",
+      "overwrite_mode": "false",
+      "show_history": "false",
+      "show_history_by_prefix": "true",
+      "embed_workflow": "true",
+      "show_previews": "true",
+      "images": [
+        "120",
+        0
+      ]
+    },
+    "class_type": "Image Save",
+    "_meta": {
+      "title": "Image Save"
+    }
+  },
+  "127": {
+    "inputs": {
+      "output_path": [
+        "151",
+        0
+      ],
+      "filename_prefix": "",
+      "filename_delimiter": "",
+      "filename_number_padding": 2,
+      "filename_number_start": "true",
+      "extension": "jpg",
+      "dpi": 300,
+      "quality": 99,
+      "optimize_image": "true",
+      "lossless_webp": "false",
+      "overwrite_mode": "false",
+      "show_history": "false",
+      "show_history_by_prefix": "true",
+      "embed_workflow": "true",
+      "show_previews": "true",
+      "images": [
+        "29",
+        0
+      ]
+    },
+    "class_type": "Image Save",
+    "_meta": {
+      "title": "Image Save"
+    }
+  },
+  "147": {
+    "inputs": {
+      "value": "C:\\Users\\user-66698\\Documents\\指定目標資料夾\\"
+    },
+    "class_type": "PrimitiveString",
+    "_meta": {
+      "title": "字符串"
+    }
+  },
+  "149": {
+    "inputs": {
+      "value": "\\"
+    },
+    "class_type": "PrimitiveString",
+    "_meta": {
+      "title": "字符串"
+    }
+  },
+  "150": {
+    "inputs": {
+      "value": "第一序列"
+    },
+    "class_type": "PrimitiveString",
+    "_meta": {
+      "title": "字符串"
+    }
+  },
+  "151": {
+    "inputs": {
+      "delimiter": "",
+      "clean_whitespace": "true",
+      "text_a": [
+        "147",
+        0
+      ],
+      "text_b": [
+        "150",
+        0
+      ],
+      "text_c": [
+        "149",
+        0
+      ],
+      "text_d": [
+        "152",
+        0
+      ]
+    },
+    "class_type": "Text Concatenate",
+    "_meta": {
+      "title": "Text Concatenate"
+    }
+  },
+  "152": {
+    "inputs": {
+      "value": "目標(Target)"
+    },
+    "class_type": "PrimitiveString",
+    "_meta": {
+      "title": "字符串"
+    }
+  },
+  "153": {
+    "inputs": {
+      "delimiter": "",
+      "clean_whitespace": "true",
+      "text_a": [
+        "147",
+        0
+      ],
+      "text_b": [
+        "150",
+        0
+      ],
+      "text_c": [
+        "149",
+        0
+      ],
+      "text_d": [
+        "154",
+        0
+      ]
+    },
+    "class_type": "Text Concatenate",
+    "_meta": {
+      "title": "Text Concatenate"
+    }
+  },
+  "154": {
+    "inputs": {
+      "value": "臉(face)"
+    },
+    "class_type": "PrimitiveString",
+    "_meta": {
+      "title": "字符串"
+    }
+  },
+  "160": {
+    "inputs": {
+      "text_0": "{\"ok\": true, \"results\": [{\"id\": \"7e102b67-9cc1-5fc0-b4c7-9f3319749286\", \"score\": 0.6471884292561274, \"payload\": {\"file_name\": \"s-00067.jpg\", \"parent_dir\": \"01\", \"full_path\": \"C:\\\\Users\\\\user-66698\\\\Documents\\\\模擬用途(用於測試工作流)\\\\01\\\\Face\\\\s-00067.jpg\"}, \"vector_len\": null, \"file_name\": \"s-00067.jpg\", \"parent_dir\": \"01\", \"full_path\": \"C:\\\\Users\\\\user-66698\\\\Documents\\\\模擬用途(用於測試工作流)\\\\01\\\\Face\\\\s-00067.jpg\"}], \"count\": 1}",
+      "text": [
+        "116",
+        0
+      ]
+    },
+    "class_type": "ShowText|pysssss",
+    "_meta": {
+      "title": "Show Text 🐍"
+    }
+  },
+  "162": {
+    "inputs": {
+      "value": "C:\\Users\\user-66698\\Documents\\模擬用途(用於測試工作流)\\"
+    },
+    "class_type": "PrimitiveString",
+    "_meta": {
+      "title": "字符串"
+    }
+  },
+  "163": {
+    "inputs": {
+      "value": "01"
+    },
+    "class_type": "PrimitiveString",
+    "_meta": {
+      "title": "字符串"
+    }
+  },
+  "164": {
+    "inputs": {
+      "value": "\\"
+    },
+    "class_type": "PrimitiveString",
+    "_meta": {
+      "title": "字符串"
+    }
+  },
+  "165": {
+    "inputs": {
+      "value": "Target"
+    },
+    "class_type": "PrimitiveString",
+    "_meta": {
+      "title": "字符串"
+    }
+  },
+  "166": {
+    "inputs": {
+      "text_0": "C:\\Users\\user-66698\\Documents\\模擬用途(用於測試工作流)\\01\\Target\\ComfyUI_00001_kdtma_1757067362.jpg",
+      "text": [
+        "110",
+        0
+      ]
+    },
+    "class_type": "ShowText|pysssss",
+    "_meta": {
+      "title": "Show Text 🐍"
+    }
+  },
+  "171": {
+    "inputs": {
+      "value": "Face_Changing01face"
+    },
+    "class_type": "PrimitiveString",
+    "_meta": {
+      "title": "字符串"
+    }
+  },
+  "172": {
+    "inputs": {
+      "value": "Face_Changing01Target"
+    },
+    "class_type": "PrimitiveString",
+    "_meta": {
+      "title": "字符串"
+    }
+  }
+}
