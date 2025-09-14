@@ -1,0 +1,26 @@
+schema_version: 3
+
+comfyui:
+  dir: C:\Users\rtyog\ComfyUI_windows_portable\ComfyUI       # 必須是 ComfyUI 根目錄（內含 main.py）
+  port: 8199
+
+paths:
+  source_root: C:\Users\rtyog\Downloads\ComfyUI_API換臉\來源
+  staging_root: C:\Users\rtyog\Downloads\ComfyUI_API換臉\暫存
+  output_root: C:\Users\rtyog\Downloads\ComfyUI_API換臉\輸出
+
+pipeline:
+  run_stage1: true
+  run_stage2: true
+  run_stage3: true
+  collection_name: "Face_Changing"
+  max_inflight: 4
+  max_retries: 2
+  poll_interval_sec: 0.75
+  keep_going_on_stage_fail: false
+
+# 只需檔名，或在 ComfyUI/user/default/workflows 裡的子資料夾路徑
+workflows:
+  stage1: Face-Swap_01_Embed-Vector_API.json
+  stage2: Face-Swap_02_Search-Match-Organize_API.json
+  stage3: Face-Swap_MINTS_API.json
