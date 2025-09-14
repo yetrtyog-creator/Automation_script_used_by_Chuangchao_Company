@@ -1,0 +1,304 @@
+{
+  "29": {
+    "inputs": {
+      "mode": "incremental_image",
+      "seed": 667915087082931,
+      "index": 0,
+      "label": "Batch 001",
+      "path": [
+        "37",
+        0
+      ],
+      "pattern": "*",
+      "allow_RGBA_output": "false",
+      "filename_text_extension": "true"
+    },
+    "class_type": "Load Image Batch",
+    "_meta": {
+      "title": "Load Image Batch"
+    }
+  },
+  "37": {
+    "inputs": {
+      "delimiter": "",
+      "clean_whitespace": "false",
+      "text_a": [
+        "117:0",
+        0
+      ],
+      "text_b": [
+        "117:1",
+        0
+      ],
+      "text_c": [
+        "117:2",
+        0
+      ],
+      "text_d": [
+        "117:3",
+        0
+      ]
+    },
+    "class_type": "Text Concatenate",
+    "_meta": {
+      "title": "Text Concatenate"
+    }
+  },
+  "57": {
+    "inputs": {
+      "insightface": [
+        "58",
+        0
+      ],
+      "face_image": [
+        "91",
+        0
+      ]
+    },
+    "class_type": "FaceEmbed",
+    "_meta": {
+      "title": "FaceEmbed for instantId"
+    }
+  },
+  "58": {
+    "inputs": {},
+    "class_type": "LoadInsightface",
+    "_meta": {
+      "title": "Load insightface"
+    }
+  },
+  "82": {
+    "inputs": {
+      "tensor": [
+        "57",
+        0
+      ]
+    },
+    "class_type": "Tensor512ToFloatList",
+    "_meta": {
+      "title": "Tensor → 512 list(float)"
+    }
+  },
+  "83": {
+    "inputs": {
+      "db_path": "./qdrant_data",
+      "collection_name": [
+        "118",
+        0
+      ],
+      "vector_dim": 512,
+      "distance": "COSINE",
+      "recreate": false,
+      "hnsw_m": 32,
+      "hnsw_ef_construct": 128,
+      "full_scan_threshold": 10000
+    },
+    "class_type": "QdrantEnsureCollection",
+    "_meta": {
+      "title": "Qdrant: Ensure/Recreate Collection (Local)"
+    }
+  },
+  "87": {
+    "inputs": {
+      "db_path": "./qdrant_data",
+      "collection_name": [
+        "118",
+        0
+      ],
+      "point_id": [
+        "124",
+        0
+      ],
+      "vector": [
+        "82",
+        0
+      ],
+      "expected_dim": 512,
+      "payload_json": "",
+      "file_name": [
+        "29",
+        1
+      ],
+      "parent_dir": [
+        "117:1",
+        0
+      ],
+      "full_path": [
+        "124",
+        0
+      ]
+    },
+    "class_type": "QdrantUpsertOne",
+    "_meta": {
+      "title": "Qdrant: Upsert One (Local)"
+    }
+  },
+  "91": {
+    "inputs": {
+      "face": true,
+      "hair": false,
+      "body": false,
+      "clothes": false,
+      "accessories": false,
+      "background": false,
+      "confidence": 0.4,
+      "detail_method": "VITMatte",
+      "detail_erode": 6,
+      "detail_dilate": 6,
+      "black_point": 0.01,
+      "white_point": 0.99,
+      "process_detail": true,
+      "device": "cuda",
+      "max_megapixels": 2,
+      "images": [
+        "29",
+        0
+      ]
+    },
+    "class_type": "LayerMask: PersonMaskUltra V2",
+    "_meta": {
+      "title": "LayerMask: PersonMaskUltra V2"
+    }
+  },
+  "110": {
+    "inputs": {
+      "delimiter": "",
+      "clean_whitespace": "true",
+      "text_a": [
+        "117:0",
+        0
+      ],
+      "text_b": [
+        "117:1",
+        0
+      ],
+      "text_c": [
+        "117:2",
+        0
+      ],
+      "text_d": [
+        "117:3",
+        0
+      ]
+    },
+    "class_type": "Text Concatenate",
+    "_meta": {
+      "title": "Text Concatenate"
+    }
+  },
+  "118": {
+    "inputs": {
+      "delimiter": "",
+      "clean_whitespace": "true",
+      "text_a": [
+        "122",
+        0
+      ],
+      "text_b": [
+        "117:1",
+        0
+      ],
+      "text_c": [
+        "117:3",
+        0
+      ]
+    },
+    "class_type": "Text Concatenate",
+    "_meta": {
+      "title": "Text Concatenate"
+    }
+  },
+  "119": {
+    "inputs": {
+      "text_0": "{\"ok\": true, \"upserted\": 1, \"status\": \"completed\", \"id\": \"c8a88e54-76fb-5b01-8ad0-b5af0bccb92a\", \"file_name\": \"ComfyUI_00010_fvokf_1757067663.jpg\", \"parent_dir\": \"01\", \"full_path\": \"C:\\\\Users\\\\user-66698\\\\Documents\\\\模擬用途(用於測試工作流)\\\\01\\\\Target\\\\ComfyUI_00010_fvokf_1757067663.jpg\"}",
+      "text": [
+        "87",
+        0
+      ]
+    },
+    "class_type": "ShowText|pysssss",
+    "_meta": {
+      "title": "Show Text 🐍"
+    }
+  },
+  "120": {
+    "inputs": {
+      "text_0": "{\"ok\": true, \"action\": \"exists\", \"collection\": \"Face_Changing01Target\"}",
+      "text": [
+        "83",
+        0
+      ]
+    },
+    "class_type": "ShowText|pysssss",
+    "_meta": {
+      "title": "Show Text 🐍"
+    }
+  },
+  "122": {
+    "inputs": {
+      "value": " Face_Changing"
+    },
+    "class_type": "PrimitiveString",
+    "_meta": {
+      "title": "字符串"
+    }
+  },
+  "124": {
+    "inputs": {
+      "delimiter": "",
+      "clean_whitespace": "true",
+      "text_a": [
+        "110",
+        0
+      ],
+      "text_b": [
+        "117:2",
+        0
+      ],
+      "text_c": [
+        "29",
+        1
+      ]
+    },
+    "class_type": "Text Concatenate",
+    "_meta": {
+      "title": "Text Concatenate"
+    }
+  },
+  "117:0": {
+    "inputs": {
+      "value": "C:\\Users\\user-66698\\Documents\\模擬用途(用於測試工作流)\\"
+    },
+    "class_type": "PrimitiveString",
+    "_meta": {
+      "title": "字符串"
+    }
+  },
+  "117:1": {
+    "inputs": {
+      "value": "01"
+    },
+    "class_type": "PrimitiveString",
+    "_meta": {
+      "title": "字符串"
+    }
+  },
+  "117:2": {
+    "inputs": {
+      "value": "\\"
+    },
+    "class_type": "PrimitiveString",
+    "_meta": {
+      "title": "字符串"
+    }
+  },
+  "117:3": {
+    "inputs": {
+      "value": "Target"
+    },
+    "class_type": "PrimitiveString",
+    "_meta": {
+      "title": "字符串"
+    }
+  }
+}
