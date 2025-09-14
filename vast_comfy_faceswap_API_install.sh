@@ -21,11 +21,35 @@ pip install --upgrade qdrant-client
 echo "[2/8] pip 安裝/更新 comfy-cli..."
 pip install --upgrade comfy-cli
 
+# --- 請用此區塊替換原本的步驟 [3/8] ---
+
 # 準備 comfy 環境
 cd "$COMFYUI_DIR"
 export COMFYUI_PATH="$COMFYUI_DIR"
-echo "[3/8] 檢查 comfy-cli 可用性..."
-python -m comfy_cli.cli --here which >/dev/null
+echo "[3/8] 檢查 comfy-cli 可用性（最多重試 3 次）..."
+
+SUCCESS=false
+for i in {1..3}; do
+    # 嘗試執行指令，'if' 會捕捉錯誤，避免 set -e 中斷腳本
+    if comfy --here which >/dev/null; then
+        SUCCESS=true
+        echo "  - comfy-cli 檢查成功。"
+        break # 成功了，就跳出重試迴圈
+    fi
+
+    # 如果失敗了，且還不是最後一次嘗試，就提示並等待
+    if [ "$i" -lt 3 ]; then
+        echo "  - 嘗試第 $i 次失敗，1 秒後重試..."
+        sleep 1
+    fi
+done
+
+# 在三次嘗試結束後，如果依然不成功，給出最終警告
+if [ "$SUCCESS" = false ]; then
+    echo "  - 警告：comfy-cli 在 3 次嘗試後仍檢查失敗，腳本將繼續執行。"
+fi
+
+# --- 替換結束 ---
 
 # 取得你的 GitHub 倉庫
 echo "[4/8] 取得工作流與自訂節點來源倉庫..."
@@ -78,7 +102,7 @@ for WF in "$WF1_GUI_DST" "$WF2_GUI_DST" "$WF3_GUI_DST"; do
   echo "  - install-deps: $WF"
   ok=0
   for ((i=1; i<=RETRIES; i++)); do
-    if yes "" | python -m comfy_cli.cli --here node install-deps --workflow "$WF"; then
+    if yes "" | comfy --here node install-deps --workflow "$WF"; then
       ok=1
       break
     else
@@ -94,7 +118,7 @@ done
 
 # 節點更新（可選）
 echo "[7.1/8] 嘗試更新所有節點（comfy-cli）..."
-if ! python -m comfy_cli.cli --here node update all; then
+if ! comfy --here node update all; then
   echo "  警告：節點更新可能部分失敗，繼續執行"
 fi
 
