@@ -25,7 +25,7 @@ pip install --upgrade comfy-cli
 cd "$COMFYUI_DIR"
 export COMFYUI_PATH="$COMFYUI_DIR"
 echo "[3/8] 檢查 comfy-cli 可用性..."
-comfy --here which >/dev/null
+python -m comfy_cli.cli --here which >/dev/null
 
 # 取得你的 GitHub 倉庫
 echo "[4/8] 取得工作流與自訂節點來源倉庫..."
@@ -78,7 +78,7 @@ for WF in "$WF1_GUI_DST" "$WF2_GUI_DST" "$WF3_GUI_DST"; do
   echo "  - install-deps: $WF"
   ok=0
   for ((i=1; i<=RETRIES; i++)); do
-    if yes "" | comfy --here node install-deps --workflow "$WF"; then
+    if yes "" | python -m comfy_cli.cli --here node install-deps --workflow "$WF"; then
       ok=1
       break
     else
@@ -94,7 +94,7 @@ done
 
 # 節點更新（可選）
 echo "[7.1/8] 嘗試更新所有節點（comfy-cli）..."
-if ! comfy --here node update all; then
+if ! python -m comfy_cli.cli --here node update all; then
   echo "  警告：節點更新可能部分失敗，繼續執行"
 fi
 
