@@ -265,6 +265,18 @@
       "title": "Text Concatenate"
     }
   },
+  "125": {
+    "inputs": {
+      "images": [
+        "91",
+        0
+      ]
+    },
+    "class_type": "PreviewImage",
+    "_meta": {
+      "title": "预览图像"
+    }
+  },
   "117:0": {
     "inputs": {
       "value": "C:\\Users\\user-66698\\Documents\\模擬用途(用於測試工作流)\\"
