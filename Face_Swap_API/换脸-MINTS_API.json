@@ -301,7 +301,7 @@
   "45": {
     "inputs": {
       "padding": 0,
-      "padding_percent": 0.30000000000000004,
+      "padding_percent": 0.3,
       "index": [
         "92",
         0
@@ -700,19 +700,6 @@
       "title": "CLIP文本编码"
     }
   },
-  "75": {
-    "inputs": {
-      "filename_prefix": "ComfyUI",
-      "images": [
-        "49",
-        0
-      ]
-    },
-    "class_type": "SaveImage",
-    "_meta": {
-      "title": "保存图像"
-    }
-  },
   "89": {
     "inputs": {
       "prompt": "young women,"
@@ -752,6 +739,72 @@
     "class_type": "LoadImage",
     "_meta": {
       "title": "Load Image-Face图"
+    }
+  },
+  "96": {
+    "inputs": {
+      "output_path": [
+        "99",
+        0
+      ],
+      "filename_prefix": "",
+      "filename_delimiter": "",
+      "filename_number_padding": 2,
+      "filename_number_start": "true",
+      "extension": "jpg",
+      "dpi": 300,
+      "quality": 99,
+      "optimize_image": "true",
+      "lossless_webp": "false",
+      "overwrite_mode": "false",
+      "show_history": "false",
+      "show_history_by_prefix": "true",
+      "embed_workflow": "true",
+      "show_previews": "true",
+      "images": [
+        "49",
+        0
+      ]
+    },
+    "class_type": "Image Save",
+    "_meta": {
+      "title": "Image Save"
+    }
+  },
+  "99": {
+    "inputs": {
+      "delimiter": ", ",
+      "clean_whitespace": "true",
+      "text_a": [
+        "100",
+        0
+      ],
+      "text_b": [
+        "101",
+        0
+      ]
+    },
+    "class_type": "Text Concatenate",
+    "_meta": {
+      "title": "Text Concatenate"
+    }
+  },
+  "100": {
+    "inputs": {
+      "value": "根"
+    },
+    "class_type": "PrimitiveString",
+    "_meta": {
+      "title": "字符串"
+    }
+  },
+  "101": {
+    "inputs": {
+      "value": "子"
+    },
+    "class_type": "PrimitiveString",
+    "_meta": {
+      "title": "字符串"
     }
   }
 }
