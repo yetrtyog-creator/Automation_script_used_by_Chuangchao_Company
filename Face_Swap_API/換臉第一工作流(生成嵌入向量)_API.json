@@ -23,19 +23,19 @@
       "delimiter": "",
       "clean_whitespace": "false",
       "text_a": [
-        "117:0",
+        "130",
         0
       ],
       "text_b": [
-        "117:1",
+        "131",
         0
       ],
       "text_c": [
-        "117:2",
+        "132",
         0
       ],
       "text_d": [
-        "117:3",
+        "133",
         0
       ]
     },
@@ -120,7 +120,7 @@
         1
       ],
       "parent_dir": [
-        "117:1",
+        "131",
         0
       ],
       "full_path": [
@@ -157,7 +157,7 @@
     },
     "class_type": "LayerMask: PersonMaskUltra V2",
     "_meta": {
-      "title": "LayerMask: PersonMaskUltra V2"
+      "title": "图层遮罩：人物遮罩 Ultra V2（高级）"
     }
   },
   "110": {
@@ -165,19 +165,19 @@
       "delimiter": "",
       "clean_whitespace": "true",
       "text_a": [
-        "117:0",
+        "130",
         0
       ],
       "text_b": [
-        "117:1",
+        "131",
         0
       ],
       "text_c": [
-        "117:2",
+        "132",
         0
       ],
       "text_d": [
-        "117:3",
+        "133",
         0
       ]
     },
@@ -195,11 +195,11 @@
         0
       ],
       "text_b": [
-        "117:1",
+        "131",
         0
       ],
       "text_c": [
-        "117:3",
+        "133",
         0
       ]
     },
@@ -252,7 +252,7 @@
         0
       ],
       "text_b": [
-        "117:2",
+        "132",
         0
       ],
       "text_c": [
@@ -265,37 +265,25 @@
       "title": "Text Concatenate"
     }
   },
-  "125": {
+  "130": {
     "inputs": {
-      "images": [
-        "91",
-        0
-      ]
-    },
-    "class_type": "PreviewImage",
-    "_meta": {
-      "title": "预览图像"
-    }
-  },
-  "117:0": {
-    "inputs": {
-      "value": "C:\\Users\\user-66698\\Documents\\模擬用途(用於測試工作流)\\"
+      "value": "C:\\Users\\user-66698\\Pictures\\"
     },
     "class_type": "PrimitiveString",
     "_meta": {
       "title": "字符串"
     }
   },
-  "117:1": {
+  "131": {
     "inputs": {
-      "value": "01"
+      "value": "集中_20250905換臉_小熊學姊"
     },
     "class_type": "PrimitiveString",
     "_meta": {
       "title": "字符串"
     }
   },
-  "117:2": {
+  "132": {
     "inputs": {
       "value": "\\"
     },
@@ -304,9 +292,9 @@
       "title": "字符串"
     }
   },
-  "117:3": {
+  "133": {
     "inputs": {
-      "value": "Target"
+      "value": "face"
     },
     "class_type": "PrimitiveString",
     "_meta": {
