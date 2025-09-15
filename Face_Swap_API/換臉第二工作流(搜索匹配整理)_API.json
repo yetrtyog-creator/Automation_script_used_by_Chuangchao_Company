@@ -368,29 +368,5 @@
     "_meta": {
       "title": "字符串"
     }
-  },
-  "173": {
-    "inputs": {
-      "images": [
-        "127",
-        0
-      ]
-    },
-    "class_type": "PreviewImage",
-    "_meta": {
-      "title": "预览图像"
-    }
-  },
-  "174": {
-    "inputs": {
-      "images": [
-        "126",
-        0
-      ]
-    },
-    "class_type": "PreviewImage",
-    "_meta": {
-      "title": "预览图像"
-    }
   }
 }
