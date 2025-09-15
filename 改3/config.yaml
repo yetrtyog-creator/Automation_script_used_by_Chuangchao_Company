@@ -1,0 +1,63 @@
+# === 修正後的 config.yaml ===
+comfyui:
+  dir: /workspace/ComfyUI
+  port: 8199
+  host: 127.0.0.1
+  start_args: "--disable-auto-launch --enable-cors-header"
+
+paths:
+  source_root: /workspace/來源/
+  staging_root: /workspace/暫存/
+  output_root: /workspace/輸出/
+
+pipeline:
+  max_inflight: 4
+  max_retries: 2
+  poll_interval_sec: 1.0
+
+workflows:
+  stage1:
+    file: /workspace/ComfyUI/user/default/workflows/Face-Swap_01_Embed-Vector_API.json
+    mappings:
+      # 節點 37 是 Text Concatenate，組合路徑為: base_dir + batch + "/" + subfolder
+      base_dir_node: "117:0"       # text_a: 來源根路徑 "/workspace/來源/"
+      batch_name_node: "117:1"     # text_b: 批次名 "01"
+      separator_node: "117:2"      # text_c: 路徑分隔符 "/" ← 重要修正！
+      subfolder_node: "117:3"      # text_d: 子資料夾 "Target" 或 "Face"
+      
+      # Load Image Batch 的 index 節點（如果有的話，請找到正確的節點 ID）
+      # index_node 應該是連接到 Load Image Batch 的 index 輸入的節點
+      # 從你的輸出看，節點 29 的 index 是直接設定的，不是從其他節點來的
+      # 所以我們可能不需要 index_node，或需要找到正確的節點
+      
+    extras:
+      collection_name_prefix: "Face_Changing"
+      recursive: true
+      pattern: "*"
+      mode: "incremental_image"
+      # index 直接設定在 Load Image Batch 節點上
+      # 不需要透過 PrimitiveString 節點
+      
+      # 自動插入 sink（確保有輸出讓 history 能追蹤）
+      # 節點 29 是 Load Image Batch，輸出 0 是處理後的圖片
+      ensure_sink_from: "46:0"  # 改為節點 46（可能是處理後的輸出）
+      sink_type: "SaveImage"    # 改用 SaveImage 確保有實際輸出
+
+  stage2:
+    file: /workspace/ComfyUI/user/default/workflows/Face-Swap_02_Search-Match-Organize_API.json
+    mappings:
+      # Stage2 使用不同的節點結構
+      # 節點 162-165 組成來源路徑
+      base_dir_node: "162"      # 來源根目錄
+      batch_name_node: "163"     # 批次名稱 (01, 02 等)
+      separator_node: "164"      # 路徑分隔符 (\)
+      subfolder_node: "165"      # 子資料夾 (Target/Face)
+      # 節點 147 是輸出目錄
+      output_root_node: "147"    # 輸出根目錄
+
+  stage3:
+    file: /workspace/ComfyUI/user/default/workflows/Face-Swap_03_Compose_API.json
+    mappings:
+      target_path_node: "317"    # 修正：只用節點 ID
+      face_path_node: "318"      # 假設是 318，請根據實際調整
+      output_root_node: "340"    # 修正：只用節點 ID
