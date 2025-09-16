@@ -773,7 +773,7 @@
   },
   "99": {
     "inputs": {
-      "delimiter": ", ",
+      "delimiter": "",
       "clean_whitespace": "true",
       "text_a": [
         "100",
