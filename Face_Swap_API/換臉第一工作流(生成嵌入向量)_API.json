@@ -23,19 +23,19 @@
       "delimiter": "",
       "clean_whitespace": "false",
       "text_a": [
-        "130",
+        "117:0",
         0
       ],
       "text_b": [
-        "131",
+        "117:1",
         0
       ],
       "text_c": [
-        "132",
+        "117:2",
         0
       ],
       "text_d": [
-        "133",
+        "117:3",
         0
       ]
     },
@@ -79,25 +79,6 @@
       "title": "Tensor → 512 list(float)"
     }
   },
-  "83": {
-    "inputs": {
-      "db_path": "./qdrant_data",
-      "collection_name": [
-        "118",
-        0
-      ],
-      "vector_dim": 512,
-      "distance": "COSINE",
-      "recreate": false,
-      "hnsw_m": 32,
-      "hnsw_ef_construct": 128,
-      "full_scan_threshold": 10000
-    },
-    "class_type": "QdrantEnsureCollection",
-    "_meta": {
-      "title": "Qdrant: Ensure/Recreate Collection (Local)"
-    }
-  },
   "87": {
     "inputs": {
       "db_path": "./qdrant_data",
@@ -120,7 +101,7 @@
         1
       ],
       "parent_dir": [
-        "131",
+        "117:1",
         0
       ],
       "full_path": [
@@ -165,19 +146,19 @@
       "delimiter": "",
       "clean_whitespace": "true",
       "text_a": [
-        "130",
+        "117:0",
         0
       ],
       "text_b": [
-        "131",
+        "117:1",
         0
       ],
       "text_c": [
-        "132",
+        "117:2",
         0
       ],
       "text_d": [
-        "133",
+        "117:3",
         0
       ]
     },
@@ -195,11 +176,11 @@
         0
       ],
       "text_b": [
-        "131",
+        "117:1",
         0
       ],
       "text_c": [
-        "133",
+        "117:3",
         0
       ]
     },
@@ -213,19 +194,6 @@
       "text_0": "{\"ok\": true, \"upserted\": 1, \"status\": \"completed\", \"id\": \"c8a88e54-76fb-5b01-8ad0-b5af0bccb92a\", \"file_name\": \"ComfyUI_00010_fvokf_1757067663.jpg\", \"parent_dir\": \"01\", \"full_path\": \"C:\\\\Users\\\\user-66698\\\\Documents\\\\模擬用途(用於測試工作流)\\\\01\\\\Target\\\\ComfyUI_00010_fvokf_1757067663.jpg\"}",
       "text": [
         "87",
-        0
-      ]
-    },
-    "class_type": "ShowText|pysssss",
-    "_meta": {
-      "title": "Show Text 🐍"
-    }
-  },
-  "120": {
-    "inputs": {
-      "text_0": "{\"ok\": true, \"action\": \"exists\", \"collection\": \"Face_Changing01Target\"}",
-      "text": [
-        "83",
         0
       ]
     },
@@ -252,7 +220,7 @@
         0
       ],
       "text_b": [
-        "132",
+        "117:2",
         0
       ],
       "text_c": [
@@ -265,25 +233,37 @@
       "title": "Text Concatenate"
     }
   },
-  "130": {
+  "125": {
     "inputs": {
-      "value": "C:\\Users\\user-66698\\Pictures\\"
+      "images": [
+        "91",
+        0
+      ]
+    },
+    "class_type": "PreviewImage",
+    "_meta": {
+      "title": "预览图像"
+    }
+  },
+  "117:0": {
+    "inputs": {
+      "value": "C:\\Users\\user-66698\\Documents\\模擬用途(用於測試工作流)\\"
     },
     "class_type": "PrimitiveString",
     "_meta": {
       "title": "字符串"
     }
   },
-  "131": {
+  "117:1": {
     "inputs": {
-      "value": "集中_20250905換臉_小熊學姊"
+      "value": "01"
     },
     "class_type": "PrimitiveString",
     "_meta": {
       "title": "字符串"
     }
   },
-  "132": {
+  "117:2": {
     "inputs": {
       "value": "\\"
     },
@@ -292,9 +272,9 @@
       "title": "字符串"
     }
   },
-  "133": {
+  "117:3": {
     "inputs": {
-      "value": "face"
+      "value": "Target"
     },
     "class_type": "PrimitiveString",
     "_meta": {
