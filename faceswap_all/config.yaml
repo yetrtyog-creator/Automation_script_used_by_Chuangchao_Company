@@ -1,0 +1,81 @@
+# === 修正後的 config.yaml ===
+comfyui:
+  dir: /workspace/ComfyUI
+  port: 8199
+  host: 127.0.0.1
+  start_args: "--disable-auto-launch --enable-cors-header"
+
+paths:
+  source_root: /workspace/來源/
+  staging_root: /workspace/暫存/
+  output_root: /workspace/輸出/
+
+pipeline:
+  max_inflight: 4
+  max_retries: 2
+  poll_interval_sec: 1.0
+
+workflows:
+  stage0:
+    file: /workspace/ComfyUI/user/default/workflows/Face-Swap_00_Create-Database_API.json
+    mappings:
+      batch_name_node: "126"     # text_b: 批次名 "01", "02", "03" ...
+      subfolder_node: "127"      # text_d: 子資料夾 "Target" 或 "Face" (輪流)
+      # Stage0 特殊設定：處理所有批次的所有子資料夾
+      process_all_batches: true
+      process_all_subfolders: true  # Target 和 Face 都要處理
+
+  stage1:
+    file: /workspace/ComfyUI/user/default/workflows/Face-Swap_01_Embed-Vector_API.json
+    mappings:
+      # 節點 37 是 Text Concatenate，組合路徑為: base_dir + batch + "/" + subfolder
+      base_dir_node: "128"       # text_a: 來源根路徑 "/workspace/來源/"
+      batch_name_node: "129"     # text_b: 批次名 "01"
+      separator_node: "130"      # text_c: 路徑分隔符 "/" ← 重要修正！
+      subfolder_node: "131"      # text_d: 子資料夾 "Target" 或 "Face"
+      
+      # Load Image Batch 的 index 節點（如果有的話，請找到正確的節點 ID）
+      # index_node 應該是連接到 Load Image Batch 的 index 輸入的節點
+      # 從你的輸出看，節點 29 的 index 是直接設定的，不是從其他節點來的
+      # 所以我們可能不需要 index_node，或需要找到正確的節點
+      
+    extras:
+      collection_name_prefix: "Face_Changing"
+      recursive: true
+      per_dir_submit: true       # ✅ 逐資料夾一次提交
+      unbounded_queue: true      # ✅ ComfyUI 端無上限排隊（客戶端不節流）
+      pattern: "*"
+      mode: "incremental_image"
+      # index 直接設定在 Load Image Batch 節點上
+      # 不需要透過 PrimitiveString 節點
+      
+      # 自動插入 sink（確保有輸出讓 history 能追蹤）
+      # 節點 29 是 Load Image Batch，輸出 0 是處理後的圖片
+      ensure_sink_from: "46:0"  # 改為節點 46（可能是處理後的輸出）
+      sink_type: "SaveImage"    # 改用 SaveImage 確保有實際輸出
+
+  stage2:
+    file: /workspace/ComfyUI/user/default/workflows/Face-Swap_02_Search-Match-Organize_API.json
+    mappings:
+      # Stage2 節點對調後的正確映射
+      output_root_node: "147"    # 輸出根目錄 (輸出到暫存目錄)
+      output_separator_node: "149"     # 路徑分隔符 "/" 
+      output_batch_name_node: "150"     # 批次名稱 (01, 02 等)
+      subfolder_Target_node: "152"      # //需更改為『Target』
+      subfolder_Face_node: "154" #//需更改為『Face』
+      # 輸入目錄設定
+      base_dir_node: "162"    # 輸入根目錄 (從來源目錄讀取)
+      batch_name_node: "163" # 輸入批次名稱
+      separator_node: "164" # 路徑分隔符"/" 
+      output_subfolder_node: "165" # 輸出子資料夾(Target/Face)
+      #集合類型 
+      collction_name_face: "171" # Face collection
+      collction_name_target: "172" # Target collection
+      
+  stage3:
+    file: /workspace/ComfyUI/user/default/workflows/Face-Swap_MINTS_API.json
+    mappings:
+      target_path_node: "17"    # 目標圖節點輸入
+      face_path_node: "95"      # 目標臉節點輸入
+      output_root_node: "100" #做為修改的
+      output_subfolder_node: "101" #子資料夾
