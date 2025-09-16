@@ -27,11 +27,11 @@
         0
       ],
       "text_b": [
-        "117:1",
+        "126",
         0
       ],
       "text_c": [
-        "117:3",
+        "127",
         0
       ]
     },
@@ -62,16 +62,7 @@
       "title": "字符串"
     }
   },
-  "117:0": {
-    "inputs": {
-      "value": "C:\\Users\\user-66698\\Documents\\模擬用途(用於測試工作流)\\"
-    },
-    "class_type": "PrimitiveString",
-    "_meta": {
-      "title": "字符串"
-    }
-  },
-  "117:1": {
+  "126": {
     "inputs": {
       "value": "01"
     },
@@ -80,20 +71,11 @@
       "title": "字符串"
     }
   },
-  "117:2": {
+  "127": {
     "inputs": {
-      "value": "\\"
+      "value": "Face"
     },
-    "class_type": "PrimitiveString",
-    "_meta": {
-      "title": "字符串"
-    }
-  },
-  "117:3": {
-    "inputs": {
-      "value": "Target"
-    },
-    "class_type": "PrimitiveString",
+    "class_type": "easy string",
     "_meta": {
       "title": "字符串"
     }
