@@ -1,0 +1,101 @@
+{
+  "83": {
+    "inputs": {
+      "db_path": "./qdrant_data",
+      "collection_name": [
+        "118",
+        0
+      ],
+      "vector_dim": 512,
+      "distance": "COSINE",
+      "recreate": false,
+      "hnsw_m": 32,
+      "hnsw_ef_construct": 128,
+      "full_scan_threshold": 10000
+    },
+    "class_type": "QdrantEnsureCollection",
+    "_meta": {
+      "title": "Qdrant: Ensure/Recreate Collection (Local)"
+    }
+  },
+  "118": {
+    "inputs": {
+      "delimiter": "",
+      "clean_whitespace": "true",
+      "text_a": [
+        "122",
+        0
+      ],
+      "text_b": [
+        "117:1",
+        0
+      ],
+      "text_c": [
+        "117:3",
+        0
+      ]
+    },
+    "class_type": "Text Concatenate",
+    "_meta": {
+      "title": "Text Concatenate"
+    }
+  },
+  "120": {
+    "inputs": {
+      "text_0": "{\"ok\": true, \"action\": \"exists\", \"collection\": \"Face_Changing01Target\"}",
+      "text": [
+        "83",
+        0
+      ]
+    },
+    "class_type": "ShowText|pysssss",
+    "_meta": {
+      "title": "Show Text 🐍"
+    }
+  },
+  "122": {
+    "inputs": {
+      "value": " Face_Changing"
+    },
+    "class_type": "PrimitiveString",
+    "_meta": {
+      "title": "字符串"
+    }
+  },
+  "117:0": {
+    "inputs": {
+      "value": "C:\\Users\\user-66698\\Documents\\模擬用途(用於測試工作流)\\"
+    },
+    "class_type": "PrimitiveString",
+    "_meta": {
+      "title": "字符串"
+    }
+  },
+  "117:1": {
+    "inputs": {
+      "value": "01"
+    },
+    "class_type": "PrimitiveString",
+    "_meta": {
+      "title": "字符串"
+    }
+  },
+  "117:2": {
+    "inputs": {
+      "value": "\\"
+    },
+    "class_type": "PrimitiveString",
+    "_meta": {
+      "title": "字符串"
+    }
+  },
+  "117:3": {
+    "inputs": {
+      "value": "Target"
+    },
+    "class_type": "PrimitiveString",
+    "_meta": {
+      "title": "字符串"
+    }
+  }
+}
