@@ -58,10 +58,10 @@
   "21": {
     "inputs": {
       "seed": 161410208601722,
-      "steps": 8,
+      "steps": 13,
       "cfg": 1,
       "sampler_name": "euler_ancestral",
-      "scheduler": "sgm_uniform",
+      "scheduler": "karras",
       "denoise": 0.5,
       "model": [
         "27",
@@ -93,10 +93,10 @@
       "clothes": false,
       "accessories": false,
       "background": false,
-      "confidence": 0.4,
+      "confidence": 0.7,
       "detail_method": "VITMatte",
       "detail_erode": 6,
-      "detail_dilate": 6,
+      "detail_dilate": 1,
       "black_point": 0.01,
       "white_point": 0.99,
       "process_detail": true,
@@ -483,8 +483,8 @@
   "58": {
     "inputs": {
       "invert_mask": false,
-      "grow": 48,
-      "blur": 16,
+      "grow": 6,
+      "blur": 2,
       "mask": [
         "60",
         1
@@ -515,10 +515,10 @@
       "clothes": false,
       "accessories": false,
       "background": false,
-      "confidence": 0.4,
+      "confidence": 0.7,
       "detail_method": "VITMatte",
       "detail_erode": 6,
-      "detail_dilate": 6,
+      "detail_dilate": 1,
       "black_point": 0.01,
       "white_point": 0.99,
       "process_detail": true,
