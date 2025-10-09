@@ -79,12 +79,20 @@ echo "🔧 [5/7] 安裝工作流依賴節點（comfy-cli）..."
 install_deps() {
   local wf="$1"
   [[ -f "$wf" ]] || { echo "  ❌ 找不到工作流：$wf"; return 1; }
-  
+
   local tries=3
-  for ((i=1;i<=tries;i++)); do
+  for ((i=1; i<=tries; i++)); do
     echo "  🔄 安裝依賴嘗試 $i/$tries"
-    # 用 here-string 餵入 Enter，避免互動式提示
-    if $COMFY --here node install-deps --workflow "$wf" <<< 
+    # 餵一個換行，避免互動式提示卡住（取代你原本壞掉的 <<<）
+    if printf '\n' | $COMFY --here node install-deps --workflow "$wf"; then
+      echo "  ✅ 依賴安裝成功"
+      return 0
+    fi
+    sleep 2
+  done
+  echo "  ⚠️ 依賴安裝失敗（將繼續執行）"
+  return 0  # 不中斷腳本
+}
 
 echo "💾 [6/7] 下載並安裝必要模型..."
 
