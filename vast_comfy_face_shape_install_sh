@@ -229,31 +229,50 @@ echo "  📦 安裝/更新 sunxAI_facetools 節點..."
 CUSTOM_NODES_DIR="$COMFYUI_DIR/custom_nodes"
 SUNXAI_DIR="$CUSTOM_NODES_DIR/comfyui_sunxAI_facetools"
 
+# 確保 custom_nodes 目錄存在
+mkdir -p "$CUSTOM_NODES_DIR"
+
+# 強制重新安裝（移除舊版本）
 if [[ -d "$SUNXAI_DIR" ]]; then
-  echo "    🔄 節點已存在，更新中..."
-  cd "$SUNXAI_DIR"
-  git pull origin main || git pull origin master || {
-    echo "    ⚠️ 更新失敗，嘗試重新安裝..."
-    cd "$CUSTOM_NODES_DIR"
-    rm -rf "$SUNXAI_DIR"
-    git clone https://github.com/upseem/comfyui_sunxAI_facetools.git "$SUNXAI_DIR"
-  }
-else
-  echo "    🔄 從 GitHub 克隆節點..."
-  cd "$CUSTOM_NODES_DIR"
-  git clone https://github.com/upseem/comfyui_sunxAI_facetools.git "$SUNXAI_DIR"
+  echo "    🗑️  移除舊版本..."
+  rm -rf "$SUNXAI_DIR"
 fi
 
-# 安裝或更新節點的 Python 依賴
-if [[ -f "$SUNXAI_DIR/requirements.txt" ]]; then
-  echo "    📦 安裝/更新節點 Python 依賴..."
-  $PIP install --upgrade -r "$SUNXAI_DIR/requirements.txt"
-  echo "    ✅ 依賴安裝完成"
+echo "    🔄 從 GitHub 克隆節點..."
+cd "$CUSTOM_NODES_DIR"
+if git clone https://github.com/upseem/comfyui_sunxAI_facetools.git "$SUNXAI_DIR"; then
+  echo "    ✅ 節點克隆成功"
+  
+  # 檢查目錄內容
+  echo "    📂 檢查節點檔案..."
+  ls -la "$SUNXAI_DIR" | head -5
+  
+  # 安裝節點的 Python 依賴
+  if [[ -f "$SUNXAI_DIR/requirements.txt" ]]; then
+    echo "    📦 安裝節點 Python 依賴..."
+    cat "$SUNXAI_DIR/requirements.txt"
+    $PIP install --no-cache-dir --force-reinstall -r "$SUNXAI_DIR/requirements.txt"
+    echo "    ✅ 依賴安裝完成"
+  else
+    echo "    ℹ️  節點沒有 requirements.txt"
+  fi
+  
+  # 檢查是否有 __init__.py
+  if [[ -f "$SUNXAI_DIR/__init__.py" ]]; then
+    echo "    ✅ 找到 __init__.py - 節點應該可以載入"
+  else
+    echo "    ⚠️  警告：未找到 __init__.py"
+  fi
+  
+else
+  echo "    ❌ 節點克隆失敗！"
+  echo "    請手動執行以下指令："
+  echo "    cd $CUSTOM_NODES_DIR"
+  echo "    git clone https://github.com/upseem/comfyui_sunxAI_facetools.git"
 fi
 
 # 切回 ComfyUI 目錄
 cd "$COMFYUI_DIR"
-echo "    ✅ sunxAI_facetools 節點安裝/更新完成"
 
 # 嘗試更新所有節點
 echo "  🔄 更新所有節點..."
