@@ -80,46 +80,56 @@ install_deps() {
   local wf="$1"
   [[ -f "$wf" ]] || { echo "  ❌ 找不到工作流：$wf"; return 1; }
 
-  # 保證在 ComfyUI 根目錄執行
-  ( cd "$COMFYUI_DIR" || exit 1
+  (
+    set -Eeuo pipefail
+    cd "$COMFYUI_DIR" || exit 1
 
-    local tries=3
-    local rc=0
+    # 關閉互動式追蹤詢問（保險）
+    export CI=1
+    export COMFY_CLI_TELEMETRY=0
+    export COMFY_CLI_TRACKING=0
+    export COMFY_DISABLE_TELEMETRY=1
 
+    # 不走管線，改用 FD 餵 'n\n'
+    run_with_input() {
+      local input="$1"; shift
+      exec 9<<<"$input"
+      "${COMFY[@]}" "$@" <&9
+      local rc=$?
+      exec 9<&-
+      return $rc
+    }
+
+    local tries=3 rc=0
     for ((i=1; i<=tries; i++)); do
       echo "  🔄 安裝依賴嘗試 $i/$tries"
-      
-      # 方案 A：使用 echo "N" 自動回答 No
-      echo "     -> echo \"N\" | $COMFY --here node install-deps --workflow '$wf'"
-      echo "N" | $COMFY --here node install-deps --workflow "$wf" && { echo "  ✅ 依賴安裝成功"; return 0; }
-      rc=$?
-      echo "     ❌ 方案A失敗 (rc=$rc)"
 
-      # 方案 B：不使用 --here，同樣自動回答
-      echo "     -> echo \"N\" | $COMFY node install-deps --workflow '$wf'"
-      echo "N" | $COMFY node install-deps --workflow "$wf" && { echo "  ✅ 依賴安裝成功"; return 0; }
-      rc=$?
-      echo "     ❌ 方案B失敗 (rc=$rc)"
+      echo "     -> ${COMFY[*]} --here node install-deps --workflow '$wf'"
+      if run_with_input $'n\n' --here node install-deps --workflow "$wf"; then
+        echo "  ✅ 依賴安裝成功"; exit 0
+      fi
+      rc=$?; echo "     ❌ 方案A失敗 (rc=$rc)"
 
-      # 方案 C：使用 -y 參數並自動回答
-      echo "     -> echo \"N\" | $COMFY node install-deps --workflow '$wf' -y"
-      echo "N" | $COMFY node install-deps --workflow "$wf" -y && { echo "  ✅ 依賴安裝成功"; return 0; }
-      rc=$?
-      echo "     ❌ 方案C失敗 (rc=$rc)"
+      echo "     -> ${COMFY[*]} node install-deps --workflow '$wf'"
+      if run_with_input $'n\n' node install-deps --workflow "$wf"; then
+        echo "  ✅ 依賴安裝成功"; exit 0
+      fi
+      rc=$?; echo "     ❌ 方案B失敗 (rc=$rc)"
 
-      # 方案 D：嘗試設置環境變數禁用追蹤
-      echo "     -> COMFY_DISABLE_TELEMETRY=1 $COMFY node install-deps --workflow '$wf'"
-      COMFY_DISABLE_TELEMETRY=1 $COMFY node install-deps --workflow "$wf" && { echo "  ✅ 依賴安裝成功"; return 0; }
-      rc=$?
-      echo "     ❌ 方案D失敗 (rc=$rc)"
+      echo "     -> ${COMFY[*]} node install-deps --workflow '$wf' -y"
+      if run_with_input $'n\n' node install-deps --workflow "$wf" -y; then
+        echo "  ✅ 依賴安裝成功"; exit 0
+      fi
+      rc=$?; echo "     ❌ 方案C失敗 (rc=$rc)"
 
       sleep 2
     done
 
     echo "  ❌ 依賴安裝連續失敗 $tries 次，停止。"
-    return 1
+    exit 1
   )
 }
+
 
 # 呼叫安裝依賴函數 - 這裡是關鍵修復點！
 if ! install_deps "$WORKFLOW_DST"; then
