@@ -88,24 +88,30 @@ install_deps() {
 
     for ((i=1; i<=tries; i++)); do
       echo "  🔄 安裝依賴嘗試 $i/$tries"
-      echo "     -> $COMFY --here node install-deps --workflow '$wf'"
-
-      # 方案 A：最新 comfy-cli（有 --here）
-      $COMFY --here node install-deps --workflow "$wf" </dev/null && { echo "  ✅ 依賴安裝成功"; return 0; }
+      
+      # 方案 A：使用 echo "N" 自動回答 No
+      echo "     -> echo \"N\" | $COMFY --here node install-deps --workflow '$wf'"
+      echo "N" | $COMFY --here node install-deps --workflow "$wf" && { echo "  ✅ 依賴安裝成功"; return 0; }
       rc=$?
       echo "     ❌ 方案A失敗 (rc=$rc)"
 
-      # 方案 B：沒有 --here
-      echo "     -> $COMFY node install-deps --workflow '$wf'"
-      $COMFY node install-deps --workflow "$wf" </dev/null && { echo "  ✅ 依賴安裝成功"; return 0; }
+      # 方案 B：不使用 --here，同樣自動回答
+      echo "     -> echo \"N\" | $COMFY node install-deps --workflow '$wf'"
+      echo "N" | $COMFY node install-deps --workflow "$wf" && { echo "  ✅ 依賴安裝成功"; return 0; }
       rc=$?
       echo "     ❌ 方案B失敗 (rc=$rc)"
 
-      # 方案 C：有些版本需要 -y/--yes
-      echo "     -> $COMFY node install-deps --workflow '$wf' -y"
-      $COMFY node install-deps --workflow "$wf" -y </dev/null && { echo "  ✅ 依賴安裝成功"; return 0; }
+      # 方案 C：使用 -y 參數並自動回答
+      echo "     -> echo \"N\" | $COMFY node install-deps --workflow '$wf' -y"
+      echo "N" | $COMFY node install-deps --workflow "$wf" -y && { echo "  ✅ 依賴安裝成功"; return 0; }
       rc=$?
       echo "     ❌ 方案C失敗 (rc=$rc)"
+
+      # 方案 D：嘗試設置環境變數禁用追蹤
+      echo "     -> COMFY_DISABLE_TELEMETRY=1 $COMFY node install-deps --workflow '$wf'"
+      COMFY_DISABLE_TELEMETRY=1 $COMFY node install-deps --workflow "$wf" && { echo "  ✅ 依賴安裝成功"; return 0; }
+      rc=$?
+      echo "     ❌ 方案D失敗 (rc=$rc)"
 
       sleep 2
     done
