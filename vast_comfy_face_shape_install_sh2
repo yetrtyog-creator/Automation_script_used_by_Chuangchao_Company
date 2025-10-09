@@ -18,13 +18,10 @@ if [[ ! -d "$COMFYUI_DIR" ]]; then
   exit 1
 fi
 
-# 找到 python 與 pip
+# 找到 python 與 pip（原樣即可）
 PY="$(command -v python3 || true)"
 [[ -z "${PY}" ]] && PY="$(command -v python || true)"
-if [[ -z "${PY}" ]]; then
-  echo "❌ 找不到 python3/python，請先安裝 Python。"
-  exit 1
-fi
+[[ -z "${PY}" ]] && { echo "❌ 找不到 python3/python"; exit 1; }
 PIP="$PY -m pip"
 
 # 確保必要工具可用
@@ -47,18 +44,21 @@ echo "🐍 [2/7] 安裝/更新 Python 套件（comfy-cli）..."
 $PIP install --upgrade --no-input comfy-cli
 hash -r || true  # 刷新 shell command hash
 
-# 設定 comfy-cli 執行方式
+# 設定 comfy-cli 執行方式（⚠️ 這裡要改）
 if command -v comfy >/dev/null 2>&1; then
-  COMFY="comfy"
+  COMFY=(comfy)
 else
-  COMFY="$PY -m comfy_cli"
+  COMFY=("$PY" -m comfy_cli)
 fi
 
 cd "$COMFYUI_DIR"
 export COMFYUI_PATH="$COMFYUI_DIR"
 
 echo "✅ [3/7] 驗證 comfy-cli 可用性..."
-$COMFY --version >/dev/null 2>&1 || $COMFY --help >/dev/null
+if ! "${COMFY[@]}" --version >/dev/null 2>&1; then
+  # 有些版本沒有 --version，就試 --help；都不行就直接報錯
+  "${COMFY[@]}" --help >/dev/null 2>&1 || { echo "❌ comfy-cli 不可用"; exit 1; }
+fi
 
 echo "📥 [4/7] 下載並安裝工作流..."
 mkdir -p "$WORKFLOWS_DIR"
