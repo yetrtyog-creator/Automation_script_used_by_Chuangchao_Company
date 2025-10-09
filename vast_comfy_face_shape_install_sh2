@@ -80,18 +80,39 @@ install_deps() {
   local wf="$1"
   [[ -f "$wf" ]] || { echo "  ❌ 找不到工作流：$wf"; return 1; }
 
-  local tries=3
-  for ((i=1; i<=tries; i++)); do
-    echo "  🔄 安裝依賴嘗試 $i/$tries"
-    # 餵一個換行，避免互動式提示卡住（取代你原本壞掉的 <<<）
-    if printf '\n' | $COMFY --here node install-deps --workflow "$wf"; then
-      echo "  ✅ 依賴安裝成功"
-      return 0
-    fi
-    sleep 2
-  done
-  echo "  ⚠️ 依賴安裝失敗（將繼續執行）"
-  return 0  # 不中斷腳本
+  # 保證在 ComfyUI 根目錄執行
+  ( cd "$COMFYUI_DIR" || exit 1
+
+    local tries=3
+    local rc=0
+
+    for ((i=1; i<=tries; i++)); do
+      echo "  🔄 安裝依賴嘗試 $i/$tries"
+      echo "     -> $COMFY --here node install-deps --workflow '$wf'"
+
+      # 方案 A：最新 comfy-cli（有 --here）
+      $COMFY --here node install-deps --workflow "$wf" </dev/null && { echo "  ✅ 依賴安裝成功"; return 0; }
+      rc=$?
+      echo "     ❌ 方案A失敗 (rc=$rc)"
+
+      # 方案 B：沒有 --here
+      echo "     -> $COMFY node install-deps --workflow '$wf'"
+      $COMFY node install-deps --workflow "$wf" </dev/null && { echo "  ✅ 依賴安裝成功"; return 0; }
+      rc=$?
+      echo "     ❌ 方案B失敗 (rc=$rc)"
+
+      # 方案 C：有些版本需要 -y/--yes
+      echo "     -> $COMFY node install-deps --workflow '$wf' -y"
+      $COMFY node install-deps --workflow "$wf" -y </dev/null && { echo "  ✅ 依賴安裝成功"; return 0; }
+      rc=$?
+      echo "     ❌ 方案C失敗 (rc=$rc)"
+
+      sleep 2
+    done
+
+    echo "  ❌ 依賴安裝連續失敗 $tries 次，停止。"
+    exit 1
+  )
 }
 
 echo "💾 [6/7] 下載並安裝必要模型..."
