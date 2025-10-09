@@ -84,7 +84,135 @@ install_deps() {
   for ((i=1;i<=tries;i++)); do
     echo "  🔄 安裝依賴嘗試 $i/$tries"
     # 用 here-string 餵入 Enter，避免互動式提示
-    if $COMFY --here node install-deps --workflow "$wf" <<< $'\n'; then
+    if $COMFY --here node install-deps --workflow "$wf" <<< 
+
+echo "💾 [6/7] 下載並安裝必要模型..."
+
+# 建立所需的模型目錄
+CHECKPOINTS_DIR="$COMFYUI_DIR/models/checkpoints"
+INSTANTID_DIR="$COMFYUI_DIR/models/instantid"
+CONTROLNET_DIR="$COMFYUI_DIR/models/controlnet"
+ULTRALYTICS_DIR="$COMFYUI_DIR/models/ultralytics/bbox"
+LANDMARKS_DIR="$COMFYUI_DIR/models/landmarks"
+INSIGHTFACE_DIR="$COMFYUI_DIR/models/insightface/models"
+
+mkdir -p "$CHECKPOINTS_DIR" "$INSTANTID_DIR" "$CONTROLNET_DIR" \
+         "$ULTRALYTICS_DIR" "$LANDMARKS_DIR" "$INSIGHTFACE_DIR"
+
+# 下載模型的通用函數
+download_model() {
+  local url="$1"
+  local dest_dir="$2"
+  local filename="$3"
+  local display_name="$4"
+  
+  echo "  📦 下載 $display_name..."
+  local dest_path="$dest_dir/$filename"
+  
+  # 如果檔案已存在，跳過下載
+  if [[ -f "$dest_path" ]]; then
+    echo "    ✅ 已存在，跳過下載"
+    return 0
+  fi
+  
+  if wget -q --show-progress -O "$dest_path" "$url"; then
+    echo "    ✅ 下載完成: $filename"
+  else
+    echo "    ❌ 下載失敗: $display_name"
+    rm -f "$dest_path"  # 清理失敗的部分下載
+    return 1
+  fi
+}
+
+# 下載各個模型
+echo "  📂 下載 Checkpoint 模型..."
+download_model \
+  "https://huggingface.co/gingerlollipopdx/ModelsXL/resolve/main/dreamshaperXL_v21TurboDPMSDE.safetensors" \
+  "$CHECKPOINTS_DIR" \
+  "dreamshaperXL_v21TurboDPMSDE.safetensors" \
+  "DreamShaper XL v21"
+
+download_model \
+  "https://huggingface.co/lllyasviel/flux1_dev/resolve/main/flux1-dev-fp8.safetensors" \
+  "$CHECKPOINTS_DIR" \
+  "flux1-dev-fp8.safetensors" \
+  "FLUX.1 Dev FP8"
+
+echo "  📂 下載 InstantID 模型..."
+download_model \
+  "https://huggingface.co/InstantX/InstantID/resolve/main/ip-adapter.bin" \
+  "$INSTANTID_DIR" \
+  "ip-adapter.bin" \
+  "InstantID IP-Adapter"
+
+echo "  📂 下載 ControlNet 模型..."
+download_model \
+  "https://huggingface.co/InstantX/InstantID/resolve/main/ControlNetModel/diffusion_pytorch_model.safetensors" \
+  "$CONTROLNET_DIR" \
+  "diffusion_pytorch_model.safetensors" \
+  "InstantID ControlNet"
+
+echo "  📂 下載 YOLOv8 模型..."
+download_model \
+  "https://huggingface.co/Bingsu/adetailer/resolve/main/face_yolov8m.pt" \
+  "$ULTRALYTICS_DIR" \
+  "face_yolov8m.pt" \
+  "Face YOLOv8m"
+
+echo "  📂 下載 Landmark 模型..."
+download_model \
+  "https://huggingface.co/goktuggumus/weights/resolve/cc6d47a6722496ee085e845b36d7bbd911597964/landmarks/fan2_68_landmark.onnx" \
+  "$LANDMARKS_DIR" \
+  "fan2_68_landmark.onnx" \
+  "FAN2 68 Landmark"
+
+echo "🦌 [7/7] 安裝 AntelopeV2 模型..."
+(
+  cd "$INSIGHTFACE_DIR"
+  # 清理舊版本
+  rm -rf antelopev2 antelopev2.zip
+  
+  echo "  📥 下載 AntelopeV2..."
+  if wget -q --show-progress -O antelopev2.zip \
+      "https://github.com/deepinsight/insightface/releases/download/v0.7/antelopev2.zip"; then
+    echo "  📦 解壓縮 AntelopeV2..."
+    unzip -o antelopev2.zip
+    rm -f antelopev2.zip
+    echo "  ✅ AntelopeV2 安裝完成"
+  else
+    echo "  ❌ AntelopeV2 下載失敗"
+  fi
+)
+
+echo
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "🎉 安裝完成！"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo
+echo "📋 已安裝項目摘要："
+echo
+echo "📄 工作流："
+echo "   └── $WORKFLOW_DST"
+echo
+echo "💾 模型："
+echo "   ├── Checkpoints:"
+echo "   │   ├── dreamshaperXL_v21TurboDPMSDE.safetensors"
+echo "   │   └── flux1-dev-fp8.safetensors"
+echo "   ├── InstantID:"
+echo "   │   └── ip-adapter.bin"
+echo "   ├── ControlNet:"
+echo "   │   └── diffusion_pytorch_model.safetensors"
+echo "   ├── Ultralytics:"
+echo "   │   └── face_yolov8m.pt"
+echo "   ├── Landmarks:"
+echo "   │   └── fan2_68_landmark.onnx"
+echo "   └── InsightFace:"
+echo "       └── antelopev2/"
+echo
+echo "🚀 啟動 ComfyUI："
+echo "   $COMFY --here launch"
+echo
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"\n'; then
       echo "  ✅ 依賴安裝成功"
       return 0
     fi
@@ -95,6 +223,23 @@ install_deps() {
 }
 
 install_deps "$WORKFLOW_DST"
+
+# 安裝 sunxAI_facetools 節點
+echo "  📦 安裝 sunxAI_facetools 節點..."
+CUSTOM_NODES_DIR="$COMFYUI_DIR/custom_nodes"
+if [[ ! -d "$CUSTOM_NODES_DIR/comfyui_sunxAI_facetools" ]]; then
+  echo "    🔄 從 GitHub 克隆節點..."
+  git clone https://github.com/sunxuia/comfyui_sunxAI_facetools.git "$CUSTOM_NODES_DIR/comfyui_sunxAI_facetools"
+  
+  # 如果節點有 requirements.txt，安裝依賴
+  if [[ -f "$CUSTOM_NODES_DIR/comfyui_sunxAI_facetools/requirements.txt" ]]; then
+    echo "    📦 安裝節點 Python 依賴..."
+    $PIP install -r "$CUSTOM_NODES_DIR/comfyui_sunxAI_facetools/requirements.txt"
+  fi
+  echo "    ✅ sunxAI_facetools 節點安裝完成"
+else
+  echo "    ✅ sunxAI_facetools 節點已存在"
+fi
 
 # 嘗試更新所有節點
 echo "  🔄 更新所有節點..."
