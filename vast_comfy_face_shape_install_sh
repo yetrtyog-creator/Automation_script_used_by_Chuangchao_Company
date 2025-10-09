@@ -225,21 +225,35 @@ echo "━━━━━━━━━━━━━━━━━━━━━━━━�
 install_deps "$WORKFLOW_DST"
 
 # 安裝 sunxAI_facetools 節點
-echo "  📦 安裝 sunxAI_facetools 節點..."
+echo "  📦 安裝/更新 sunxAI_facetools 節點..."
 CUSTOM_NODES_DIR="$COMFYUI_DIR/custom_nodes"
-if [[ ! -d "$CUSTOM_NODES_DIR/comfyui_sunxAI_facetools" ]]; then
-  echo "    🔄 從 GitHub 克隆節點..."
-  git clone https://github.com/upseem/comfyui_sunxAI_facetools.git "$CUSTOM_NODES_DIR/comfyui_sunxAI_facetools"
-  
-  # 如果節點有 requirements.txt，安裝依賴
-  if [[ -f "$CUSTOM_NODES_DIR/comfyui_sunxAI_facetools/requirements.txt" ]]; then
-    echo "    📦 安裝節點 Python 依賴..."
-    $PIP install -r "$CUSTOM_NODES_DIR/comfyui_sunxAI_facetools/requirements.txt"
-  fi
-  echo "    ✅ sunxAI_facetools 節點安裝完成"
+SUNXAI_DIR="$CUSTOM_NODES_DIR/comfyui_sunxAI_facetools"
+
+if [[ -d "$SUNXAI_DIR" ]]; then
+  echo "    🔄 節點已存在，更新中..."
+  cd "$SUNXAI_DIR"
+  git pull origin main || git pull origin master || {
+    echo "    ⚠️ 更新失敗，嘗試重新安裝..."
+    cd "$CUSTOM_NODES_DIR"
+    rm -rf "$SUNXAI_DIR"
+    git clone https://github.com/upseem/comfyui_sunxAI_facetools.git "$SUNXAI_DIR"
+  }
 else
-  echo "    ✅ sunxAI_facetools 節點已存在"
+  echo "    🔄 從 GitHub 克隆節點..."
+  cd "$CUSTOM_NODES_DIR"
+  git clone https://github.com/upseem/comfyui_sunxAI_facetools.git "$SUNXAI_DIR"
 fi
+
+# 安裝或更新節點的 Python 依賴
+if [[ -f "$SUNXAI_DIR/requirements.txt" ]]; then
+  echo "    📦 安裝/更新節點 Python 依賴..."
+  $PIP install --upgrade -r "$SUNXAI_DIR/requirements.txt"
+  echo "    ✅ 依賴安裝完成"
+fi
+
+# 切回 ComfyUI 目錄
+cd "$COMFYUI_DIR"
+echo "    ✅ sunxAI_facetools 節點安裝/更新完成"
 
 # 嘗試更新所有節點
 echo "  🔄 更新所有節點..."
