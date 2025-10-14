@@ -40,8 +40,9 @@ ensure_tool git
 ensure_tool wget
 ensure_tool unzip
 
-echo "🐍 [2/7] 安裝/更新 Python 套件（comfy-cli）..."
+echo "🐍 [2/7] 安裝/更新 Python 套件（comfy-cli 和 gdown）..."
 $PIP install --upgrade --no-input comfy-cli
+$PIP install --upgrade --no-input gdown
 hash -r || true  # 刷新 shell command hash
 
 # 設定 comfy-cli 執行方式
@@ -64,7 +65,7 @@ echo "📥 [4/7] 下載並安裝工作流..."
 mkdir -p "$WORKFLOWS_DIR"
 
 # 下載新工作流
-WORKFLOW_URL="https://raw.githubusercontent.com/yetrtyog-creator/Automation_script_used_by_Chuangchao_Company/main/%E5%8C%B9%E9%85%8D%E8%84%B8%E5%9E%8B%E6%8D%A2%E8%84%B8%E9%AB%98%E7%9B%B8%E4%BC%BC%E5%BA%A6_%E6%94%B9%E9%81%8E.json"
+WORKFLOW_URL="https://raw.githubusercontent.com/yetrtyog-creator/Automation_script_used_by_Chuangchao_Company/main/%E5%8C%B9%E9%85%8D%E8%84%B8%E5%9E%8B%E6%8D%A2%E8%84%B8%E9%AB%98%E7%9B%B8%E4%BC%BC%E5%BA%A6_%E6%94%B9%E9%81%8E3.json"
 WORKFLOW_DST="$WORKFLOWS_DIR/face-matching-high-similarity.json"
 
 echo "  📄 下載工作流..."
@@ -167,9 +168,10 @@ CONTROLNET_DIR="$COMFYUI_DIR/models/controlnet"
 ULTRALYTICS_DIR="$COMFYUI_DIR/models/ultralytics/bbox"
 LANDMARKS_DIR="$COMFYUI_DIR/models/landmarks"
 INSIGHTFACE_DIR="$COMFYUI_DIR/models/insightface/models"
+LORAS_DIR="$COMFYUI_DIR/models/loras"
 
 mkdir -p "$CHECKPOINTS_DIR" "$INSTANTID_DIR" "$CONTROLNET_DIR" \
-         "$ULTRALYTICS_DIR" "$LANDMARKS_DIR" "$INSIGHTFACE_DIR"
+         "$ULTRALYTICS_DIR" "$LANDMARKS_DIR" "$INSIGHTFACE_DIR" "$LORAS_DIR"
 
 # 下載模型的通用函數
 download_model() {
@@ -196,19 +198,52 @@ download_model() {
   fi
 }
 
+# 從 Google Drive 下載模型的函數
+download_from_gdrive() {
+  local file_id="$1"
+  local dest_dir="$2"
+  local filename="$3"
+  local display_name="$4"
+  
+  echo "  📦 從 Google Drive 下載 $display_name..."
+  local dest_path="$dest_dir/$filename"
+  
+  # 如果檔案已存在，跳過下載
+  if [[ -f "$dest_path" ]]; then
+    echo "    ✅ 已存在，跳過下載"
+    return 0
+  fi
+  
+  # 使用 gdown 下載
+  if gdown --id "$file_id" -O "$dest_path"; then
+    echo "    ✅ 下載完成: $filename"
+  else
+    echo "    ❌ 下載失敗: $display_name"
+    rm -f "$dest_path"  # 清理失敗的部分下載
+    return 1
+  fi
+}
+
 # 下載各個模型
 echo "  📂 下載 Checkpoint 模型..."
-download_model \
-  "https://huggingface.co/gingerlollipopdx/ModelsXL/resolve/main/dreamshaperXL_v21TurboDPMSDE.safetensors" \
+download_from_gdrive \
+  "1cEsoU56D1-MGgS8lrNcXDuASY6RKZ5pc" \
   "$CHECKPOINTS_DIR" \
-  "dreamshaperXL_v21TurboDPMSDE.safetensors" \
-  "DreamShaper XL v21"
+  "pornmaster_proSDXLV7.safetensors" \
+  "PornMaster Pro SDXL V7"
 
 download_model \
   "https://huggingface.co/lllyasviel/flux1_dev/resolve/main/flux1-dev-fp8.safetensors" \
   "$CHECKPOINTS_DIR" \
   "flux1-dev-fp8.safetensors" \
   "FLUX.1 Dev FP8"
+
+echo "  📂 下載 LoRA 模型..."
+download_from_gdrive \
+  "1JnMpVeylONSHE0SNab-VmS-7qTSb0oc0" \
+  "$LORAS_DIR" \
+  "lora_model.safetensors" \
+  "LoRA Model"
 
 echo "  📂 下載 InstantID 模型..."
 download_model \
@@ -271,6 +306,8 @@ echo "💾 模型："
 echo "   ├── Checkpoints:"
 echo "   │   ├── pornmaster_proSDXLV7.safetensors"
 echo "   │   └── flux1-dev-fp8.safetensors"
+echo "   ├── LoRAs:"
+echo "   │   └── lora_model.safetensors"
 echo "   ├── InstantID:"
 echo "   │   └── ip-adapter.bin"
 echo "   ├── ControlNet:"
