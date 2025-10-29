@@ -23,6 +23,7 @@ HUGGINGFACE_TOKEN="${HUGGINGFACE_TOKEN:-}"
 
 # Hugging Face Repos 與路徑（皆為公開資源）
 HF_REPO_MAIN="Comfy-Org/Qwen-Image_ComfyUI"
+HF_REPO_EDIT="Comfy-Org/Qwen-Image-Edit_ComfyUI"         # [新增] 專門放 Edit 2509 / multi-image edit 模型
 DIFF_FILE="split_files/diffusion_models/qwen_image_fp8_e4m3fn.safetensors"
 TXTENC_FILE="split_files/text_encoders/qwen_2.5_vl_7b_fp8_scaled.safetensors"
 VAE_FILE="split_files/vae/qwen_image_vae.safetensors"
@@ -169,7 +170,7 @@ dl_file "$HF_REPO_MAIN" "$VAE_FILE" "$VAE_DIR/$(basename "$VAE_FILE")" "$VAE_MIN
 
 # 4) (optional) Edit model v2509
 if [ "$INSTALL_EDIT" = "1" ]; then
-  dl_file "$HF_REPO_MAIN" "$EDIT_FILE" "$DIFF_DIR/$(basename "$EDIT_FILE")" "$EDIT_MIN_SIZE_MB"  # [CHANGED]
+  dl_file "$HF_REPO_EDIT" "$EDIT_FILE" "$DIFF_DIR/$(basename "$EDIT_FILE")"
 fi
 
 # 5) (optional) Example LoRA
