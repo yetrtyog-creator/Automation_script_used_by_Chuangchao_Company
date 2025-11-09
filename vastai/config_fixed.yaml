@@ -21,6 +21,6 @@ template:
   direct: true
 
 auth:
-  api_key: ef5d66d01a8bfab1cfe900907d935f6316ab5f72d7d8117beb5f441a1b3fc3a7
+  api_key: 
   persist: false
   method: arg
