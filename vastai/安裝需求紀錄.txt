@@ -1,0 +1,14 @@
+WSL2 快速安裝/環境小抄
+# 系統工具
+sudo apt update
+sudo apt install -y python3-pip jq fzf
+
+# 安裝 CLI（新版 PyPI）
+python3 -m pip install --user vastai
+
+# 建議把 ~/.local/bin 加到 PATH（放入 ~/.bashrc）
+echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
+source ~/.bashrc
+
+# 登入（設定 API Key）
+vastai setup   # 或者：vastai --api-key <你的API_KEY>

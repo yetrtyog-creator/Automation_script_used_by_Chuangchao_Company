@@ -1,0 +1,26 @@
+# config_fixed.yaml — 修正版本（移除破壞 YAML 的 "..."，補齊欄位）
+
+gpu_names: [RTX_5090]
+
+geolocations: [US,GB,DE,FR,NL,SE,FO,DK,FI,IE,IT,ES,PT,PL,CZ,AT,CH,BE,EE,LV,LT,RO,BG,HU,SK,SI,HR,GR,IS,LU,MT,CY]
+
+disk_space_gb_min: 300
+
+price:
+  use_dph_total: false
+  min_dph: 0.6
+  max_dph: 0.75
+
+order_by: dph
+
+template:
+  mode: docker_image
+  docker_image: ghcr.io/comfyanonymous/comfyui:latest
+  disk_gb: 300
+  ssh: true
+  direct: true
+
+auth:
+  api_key: ef5d66d01a8bfab1cfe900907d935f6316ab5f72d7d8117beb5f441a1b3fc3a7
+  persist: false
+  method: arg

@@ -1,0 +1,68 @@
+# config.yaml — 極簡精準版（與你確認的查詢一致）
+
+gpu_names: [RTX_5090]
+
+geolocations:
+  - US
+  - GB
+  - DE
+  - FR
+  - NL
+  - SE
+  - FO   # Faroe Islands（不是 FA）
+  - DK
+  - FI
+  - IE
+  - IT
+  - ES
+  - PT
+  - PL
+  - CZ
+  - AT
+  - CH
+  - BE
+  - EE
+  - LV
+  - LT
+  - RO
+  - BG
+  - HU
+  - SK
+  - SI
+  - HR
+  - GR
+  - IS
+  - LU
+  - MT
+  - CY
+
+disk_space_gb_min: 300
+
+price:
+  min_dph: 0.6
+  max_dph: 0.75
+  use_dph_total: false
+
+order_by: dph
+
+# bandwidth_min:
+#   down_mbps: 0
+#   up_mbps: 0
+
+# 只有在這裡明確寫出才會加入查詢條件（預設不加）：
+# external: false
+# rentable: true
+# verified: true
+# rented: false
+
+template:
+  mode: docker_image
+  docker_image: ghcr.io/comfyanonymous/comfyui:latest
+  disk_gb: 300
+  ssh: true
+  direct: true
+
+auth:
+  api_key: ef5d66d01a8bfab1cfe900907d935f6316ab5f72d7d8117beb5f441a1b3fc3a7
+  persist: false
+  method: arg
