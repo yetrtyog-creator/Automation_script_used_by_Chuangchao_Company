@@ -44,7 +44,7 @@ template:
   direct: true
 
 auth:
-  api_key: 9cc154a395fe60fb7165ccb18b069e03916d9825861b51926df1596fae0616dd
+  api_key: 
   persist: false
   method: arg                  # or env
 
@@ -53,3 +53,4 @@ cli:
     - vastai
     - vast
   pythonioencoding: "utf-8"
+
