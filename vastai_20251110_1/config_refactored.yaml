@@ -36,9 +36,9 @@ results:
   display_limit: 20            # 原本只顯示前 20 筆，改由設定檔控制
 
 template:
-  mode: docker_image           # 或 template_merge / template_only
+  mode: template_merge           # 或 template_merge / template_only
   docker_image: ghcr.io/ai-dock/comfyui:latest-cuda  # 若 mode=docker_image 必填
-  template_hash: ""            # 若使用 template_* 模式必填
+  template_hash: 53478aac54ffed2deace9e69d93e52dc            # 若使用 template_* 模式必填
   disk_gb: 150
   ssh: true
   direct: true
