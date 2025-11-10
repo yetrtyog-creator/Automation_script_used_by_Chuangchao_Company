@@ -1,0 +1,55 @@
+gpu_names:
+  - RTX 5090
+
+geolocations: []  # 或者完全刪除這一行
+
+disk_space_gb_min: 150
+
+price:
+  min_dph: 0.6
+  max_dph: 0.9
+  use_dph_total: true
+
+order_by: dph_total
+
+bandwidth:
+  down_mbps: 0        # 若無要求可填 0 或拿掉欄位
+  up_mbps: 0
+
+instance_filters:
+  external: false
+  rentable: true
+  verified: true
+  rented: false
+
+# 可省略代表不限制，若填寫必為：bid / on-demand / reserved
+rental_type: on-demand
+
+search:
+  timeout_seconds: 30          # 原本 search_offers timeout=30 抽出至此
+  relax:
+    enable_geo_relax: true     # 是否啟用地理放寬策略
+    price_min_factor: 0.8      # 原本 0.8，現在必須明寫
+    price_max_factor: 1.2      # 原本 1.2，現在必須明寫
+
+results:
+  display_limit: 20            # 原本只顯示前 20 筆，改由設定檔控制
+
+template:
+  mode: docker_image           # 或 template_merge / template_only
+  docker_image: ghcr.io/ai-dock/comfyui:latest-cuda  # 若 mode=docker_image 必填
+  template_hash: ""            # 若使用 template_* 模式必填
+  disk_gb: 150
+  ssh: true
+  direct: true
+
+auth:
+  api_key: 9cc154a395fe60fb7165ccb18b069e03916d9825861b51926df1596fae0616dd
+  persist: false
+  method: arg                  # or env
+
+cli:
+  executable_candidates:
+    - vastai
+    - vast
+  pythonioencoding: "utf-8"
