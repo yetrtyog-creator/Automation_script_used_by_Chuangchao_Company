@@ -24,7 +24,11 @@ MODEL_PATCHES_DIR="$MODELS_DIR/model_patches"
 # 切換項目（0/1）
 INSTALL_EXAMPLE_LORA="${INSTALL_EXAMPLE_LORA:-0}"  # 1 = 下載 Pixel Art 風格 LoRA 範例
 INSTALL_CONTROLNET="${INSTALL_CONTROLNET:-0}"     # 1 = 下載 Z-Image Turbo Fun ControlNet Union
+INSTALL_RES4LYF="${INSTALL_RES4LYF:-1}"           # 1 = 安裝 RES4LYF 進階採樣器節點（預設開啟）
 USE_ARIA2="${USE_ARIA2:-1}"                       # 1 = 優先使用 aria2c 多線續傳下載
+
+# RES4LYF 自定義節點（進階採樣器，支援 115 種採樣器、24 種噪聲類型）
+RES4LYF_REPO="https://github.com/ClownsharkBatwing/RES4LYF.git"
 
 # Hugging Face Repos 與路徑（皆為公開資源）
 HF_REPO_MAIN="Comfy-Org/z_image_turbo"
@@ -158,6 +162,34 @@ if [ "$INSTALL_CONTROLNET" = "1" ]; then
   dl_file "$CONTROLNET_REPO" "$CONTROLNET_FILE" "$MODEL_PATCHES_DIR/$CONTROLNET_FILE"
 fi
 
+# 6) RES4LYF 進階採樣器節點
+if [ "$INSTALL_RES4LYF" = "1" ]; then
+  say ""
+  say "[節點] 安裝 RES4LYF 進階採樣器..."
+  
+  CUSTOM_NODES_DIR="$COMFY_ROOT/custom_nodes"
+  RES4LYF_DIR="$CUSTOM_NODES_DIR/RES4LYF"
+  
+  mkdir -p "$CUSTOM_NODES_DIR"
+  
+  if [ -d "$RES4LYF_DIR" ]; then
+    say "RES4LYF 已存在，更新中..."
+    cd "$RES4LYF_DIR"
+    git pull || warn "git pull 失敗，可能需要手動更新"
+  else
+    say "克隆 RES4LYF 倉庫..."
+    git clone "$RES4LYF_REPO" "$RES4LYF_DIR" || die "git clone RES4LYF 失敗"
+  fi
+  
+  # 安裝依賴
+  if [ -f "$RES4LYF_DIR/requirements.txt" ]; then
+    say "安裝 RES4LYF 依賴..."
+    pip install -r "$RES4LYF_DIR/requirements.txt" || warn "RES4LYF 依賴安裝可能不完整"
+  fi
+  
+  say "RES4LYF 安裝完成"
+fi
+
 say ""
 say "=========================================="
 say "安裝完成！"
@@ -169,6 +201,7 @@ echo "  📂 Text Encoder:     $TXTENC_DIR/$(basename "$TXTENC_FILE")"
 echo "  📂 VAE:              $VAE_DIR/$(basename "$VAE_FILE")"
 [ "$INSTALL_EXAMPLE_LORA" = "1" ] && echo "  📂 Example LoRA:     $LORA_DIR/$LORA_FILE"
 [ "$INSTALL_CONTROLNET" = "1" ] && echo "  📂 ControlNet:       $MODEL_PATCHES_DIR/$CONTROLNET_FILE"
+[ "$INSTALL_RES4LYF" = "1" ] && echo "  📂 RES4LYF:          $COMFY_ROOT/custom_nodes/RES4LYF/"
 
 say ""
 say "ComfyUI 目錄結構："
@@ -181,6 +214,8 @@ cat << 'EOF'
 │   │   └── z_image_turbo_bf16.safetensors
 │   └── 📂 vae/
 │       └── ae.safetensors
+└── 📂 custom_nodes/
+    └── 📂 RES4LYF/          ← 進階採樣器節點
 EOF
 
 say ""
@@ -188,6 +223,12 @@ say "使用說明："
 say "  1. 確保 ComfyUI 已更新至最新版本"
 say "  2. 在 ComfyUI 中載入 Z-Image Turbo 工作流模板"
 say "  3. 推薦設定：8 步推理、Guidance Scale = 0.0"
+say ""
+say "RES4LYF 特色功能："
+say "  - 115 種採樣器類型、24 種噪聲類型、11 種噪聲縮放模式"
+say "  - ClownsharKSampler：進階一體化採樣節點"
+say "  - 支援 HiDream、Flux、SD3.5、AuraFlow、WAN 等模型"
+say "  - Regional/Temporal Conditioning（區域/時序提示詞）"
 say ""
 say "官方工作流範例："
 say "  https://comfyanonymous.github.io/ComfyUI_examples/z_image/"
